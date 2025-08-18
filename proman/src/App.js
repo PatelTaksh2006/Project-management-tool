@@ -1,14 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
-import NavBar from './components/Navbar';
-import Sidebar from './components/Sidebar';
+import "./App.css";
+import Manager_Dashboard from "./pages/Manager/Dashboard";
+import Manager_Project from "./pages/Manager/Project";
 
 function App() {
   return (
     <div className="App">
-      < NavBar />
-      <Sidebar />
-      
+      <Manager_Dashboard   />
+      <Manager_Project />
     </div>
   );
 }
