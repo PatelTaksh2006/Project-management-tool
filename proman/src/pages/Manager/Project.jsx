@@ -1,366 +1,140 @@
-// import React, { useMemo, useState } from "react";
-// import {
-//   Container,
-//   Row,
-//   Col,
-//   Card,
-//   Button,
-//   Modal,
-//   Form,
-//   InputGroup,
-//   Badge,
-//   ProgressBar,
-//   Table,
-//   Dropdown,
-//   ButtonGroup,
-// } from "react-bootstrap";
-// import Navbar from "../../components/Navbar";
-// import Sidebar from "../../components/Sidebar";
-
-// // Helper to render status as Bootstrap badge variant
-
-// export default function Projects() {
-//   const [showAdd, setShowAdd] = useState(false);
-//   const [search, setSearch] = useState("");
-//   const [statusFilter, setStatusFilter] = useState("All");
-//   const [sortBy, setSortBy] = useState("updated"); // "name" | "progress" | "updated"
-
-// Demo data in component state (replace with API later)
-// Add modal form state
-// const [form, setForm] = useState({
-//   name: "",
-//   owner: "",
-//   status: "Active",
-//   progress: 0,
-//   tasksDone: 0,
-//   tasksTotal: 0,
-//   team: "",
-//   startDate: "",
-//   dueDate: "",
-// });
-
-//   return (
-//     <div className="bg-light min-vh-100">
-//       <Navbar />
-
-//       <Row className="g-4">
-//         {/* Sidebar */}
-//         <Col xs={12} md={3} lg={2}>
-//           <Sidebar />
-//         </Col>
-
-//         {/* Main */}
-//         <Col xs={12} md={9} lg={10}>
-//           {/* Header bar */}
-//           <Row className="g-3 align-items-center mb-2">
-//             <Col xs={12} md={6}>
-//               <h3 className="mb-0">Projects</h3>
-//               <div className="text-muted small">
-//                 Manage and track all projects in one place
-//               </div>
-//             </Col>
-//             <Col xs={12} md={6} className="text-md-end">
-//               <Button variant="primary" onClick={() => setShowAdd(true)}>
-//                 + Add New Project
-//               </Button>
-//             </Col>
-//           </Row>
-
-//           {/* Stats cards */}
-//           <Row className="g-3 mb-1">
-//             <Col sm={6} lg={3}>
-//               <Card className="h-100">
-//                 <Card.Body>
-//                   <div className="text-muted">Total</div>
-//                   <h4 className="mb-0">5</h4>
-//                 </Card.Body>
-//               </Card>
-//             </Col>
-//             <Col sm={6} lg={3}>
-//               <Card className="h-100">
-//                 <Card.Body>
-//                   <div className="text-muted">Active</div>
-//                   <h4 className="mb-0">
-//                     2
-//                     <Badge bg="primary" pill className="ms-1">
-//                       Active
-//                     </Badge>
-//                   </h4>
-//                 </Card.Body>
-//               </Card>
-//             </Col>
-//             <Col sm={6} lg={3}>
-//               <Card className="h-100">
-//                 <Card.Body>
-//                   <div className="text-muted">Completed</div>
-//                   <h4 className="mb-0">
-//                     4
-//                     <Badge bg="success" pill className="ms-1">
-//                       Done
-//                     </Badge>
-//                   </h4>
-//                 </Card.Body>
-//               </Card>
-//             </Col>
-//             <Col sm={6} lg={3}>
-//               <Card className="h-100">
-//                 <Card.Body>
-//                   <div className="text-muted">Overall Progress</div>
-//                   <ProgressBar now={35} label={`35%`} />
-//                 </Card.Body>
-//               </Card>
-//             </Col>
-//           </Row>
-
-//           {/* Filters */}
-//           <Card className="mb-3">
-//             <Card.Body>
-//               <Row className="g-2 align-items-center">
-//                 <Col xs={12} md={6} lg={5}>
-//                   <InputGroup>
-//                     <InputGroup.Text id="search-addon">Search</InputGroup.Text>
-//                     <Form.Control
-//                       placeholder="Search by name, owner, or team"
-//                       aria-label="Search"
-//                       aria-describedby="search-addon"
-//                       // value={search}
-//                       // onChange={(e) => setSearch(e.target.value)}
-//                     />
-//                   </InputGroup>
-//                 </Col>
-//                 <Col xs={6} md={3} lg={3}>
-//                   <Form.Select
-//                   // value={statusFilter}
-//                   // onChange={(e) => setStatusFilter(e.target.value)}
-//                   >
-//                     <option>All</option>
-//                     <option>Active</option>
-//                     <option>Completed</option>
-//                     <option>On Hold</option>
-//                     <option>Delayed</option>
-//                   </Form.Select>
-//                 </Col>
-//                 <Col xs={6} md={3} lg={2}>
-//                   <Form.Select
-//                   // value={sortBy}
-//                   // onChange={(e) => setSortBy(e.target.value)}
-//                   >
-//                     <option value="updated">Sort: Last Updated</option>
-//                     <option value="name">Sort: Name</option>
-//                     <option value="progress">Sort: Progress</option>
-//                   </Form.Select>
-//                 </Col>
-//                 <Col xs={12} lg={2} className="text-lg-end">
-//                   <Button
-//                     variant="outline-secondary"
-//                     // onClick={() => { setSearch(""); setStatusFilter("All"); setSortBy("updated"); }}
-//                   >
-//                     Reset
-//                   </Button>
-//                 </Col>
-//               </Row>
-//             </Card.Body>
-//           </Card>
-
-//           {/* Projects table */}
-//           <Card>
-//             <Card.Body className="p-0">
-//               <Table responsive hover className="mb-0 align-middle">
-//                 <thead className="table-light">
-//                   <tr>
-//                     <th>Name</th>
-//                     <th className="d-none d-lg-table-cell">Owner</th>
-//                     <th>Status</th>
-//                     <th>Progress</th>
-//                     <th className="d-none d-md-table-cell">Tasks</th>
-//                     <th className="d-none d-xl-table-cell">Team</th>
-//                     <th className="d-none d-xl-table-cell">Start</th>
-//                     <th className="d-none d-xl-table-cell">Due</th>
-//                     <th className="text-end">Actions</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody></tbody>
-//               </Table>
-//             </Card.Body>
-//             {/* <Card.Footer className="text-muted small">
-//                 Showing {sorted.length} of {projects.length} projects
-//               </Card.Footer> */}
-//           </Card>
-//         </Col>
-//       </Row>
-//       {/* </Container> */}
-
-//       {/* Add Project Modal */}
-//       <Modal centered>
-//         <Form>
-//           <Modal.Header closeButton>
-//             <Modal.Title>Add New Project</Modal.Title>
-//           </Modal.Header>
-//           <Modal.Body>
-//             <Row className="g-3">
-//               <Col md={8}>
-//                 <Form.Group controlId="formName">
-//                   <Form.Label>Project Name</Form.Label>
-//                   <Form.Control
-//                     required
-//                     value={form.name}
-//                     // onChange={(e) => setForm({ ...form, name: e.target.value })}
-//                     placeholder="Enter project name"
-//                   />
-//                 </Form.Group>
-//               </Col>
-
-//               <Col md={6}>
-//                 <Form.Group controlId="formStatus">
-//                   <Form.Label>Status</Form.Label>
-//                   <Form.Select
-//                     value={form.status}
-//                     // onChange={(e) => setForm({ ...form, status: e.target.value })}
-//                   >
-//                     <option>Active</option>
-//                     <option>Completed</option>
-//                     <option>On Hold</option>
-//                     <option>Delayed</option>
-//                   </Form.Select>
-//                 </Form.Group>
-//               </Col>
-//               <Col md={6}>
-//                 <Form.Group controlId="formProgress">
-//                   <Form.Label>Progress (%)</Form.Label>
-//                   <Form.Control
-//                     type="number"
-//                     min={0}
-//                     max={100}
-//                     value={form.progress}
-//                     // onChange={(e) => setForm({ ...form, progress: e.target.value })}
-//                   />
-//                 </Form.Group>
-//               </Col>
-
-//               <Col md={6}>
-//                 <Form.Group controlId="formStart">
-//                   <Form.Label>Start Date</Form.Label>
-//                   <Form.Control
-//                     type="date"
-//                     value={form.startDate}
-//                     // onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-//                   />
-//                 </Form.Group>
-//               </Col>
-//               <Col md={6}>
-//                 <Form.Group controlId="formDue">
-//                   <Form.Label>Due Date</Form.Label>
-//                   <Form.Control
-//                     type="date"
-//                     value={form.dueDate}
-//                     // onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-//                   />
-//                 </Form.Group>
-//               </Col>
-//             </Row>
-//           </Modal.Body>
-//           <Modal.Footer>
-//             <Button
-//               variant="outline-secondary"
-//               // onClick={() => setShowAdd(false)}
-//             >
-//               Cancel
-//             </Button>
-//             <Button type="submit" variant="primary">
-//               Save Project
-//             </Button>
-//           </Modal.Footer>
-//         </Form>
-//       </Modal>
-//     </div>
-//   );
-// }
-
-import React from "react";
 import Search_form from "../../components/Search_form";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { Row, Col, Button, Container, Badge, Table } from "react-bootstrap";
+import { useState} from "react";
+import { Row, Col, Button, Container, Badge, Table,Dropdown,ButtonGroup } from "react-bootstrap";
+import AddNewProject from "../../components/AddNewProject";
+
 export default function Project() {
   const projects = [
-    {
-      Id: 1,
-      Name: "management tool",
-      Employees: 20,
-      Start_Date: "2025-09-21",
-      End_date: "2025-01-29",
-      Status: "Active",
-    },
-  ];
-  return (
-    <div>
-      <Navbar />
-      <Row>
-        <Col md={3}>
-          <Sidebar projects={"./Project"} />
-        </Col>
-        <Col md={8}>
-          <br></br>
-          <Container className="fluid" style={{ paddingTop: 60, margin: 20 }}>
-            <Row>
-              <Col xs={12} md={6}>
-                <h3 className="mb-0">Projects</h3>
-                <div className="text-muted small">
-                  Manage and track all projects in one place
-                </div>
-              </Col>
-              <Col sm={{ span: 3, offset: 3 }}>
-                <Button className="primary">Add new Project</Button>
-              </Col>
-            </Row>
-          </Container>
-          <Container>
-            <Row>
-              <Col sm={4}>
-                <DisplayProject name="Active" count={2} />
-              </Col>
-              <Col sm={4}>
-                <DisplayProject name="Completed" count={5} />
-              </Col>
-              <Col sm={4}>
-                <DisplayProjectStatus name="Pending" count={5} />
-              </Col>
-            </Row>
-          </Container>
-          <Container>
-            <Row>
-              <Col sm={6}>
-                <Search_form />
-              </Col>
-            </Row>
-          </Container>
-          <Container style={{ paddingTop: "20px" }}>
-            <Row>
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Employees</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {projects.forEach((element) => (
-                    <DisplayProject element={element} />
-                  ))}
-                </tbody>
-              </Table>
-            </Row>
-          </Container>
-        </Col>
-      </Row>
-    </div>
-  );
-}
+  {
+    Id: 1,
+    Name: "management tool",
+    Employees: 20,
+    Start_Date: "2025-09-21",
+    End_date: "2025-01-29",
+    Status: "Active",
+  },
+  {
+    Id: 2,
+    Name: "analytics platform",
+    Employees: 8,
+    Start_Date: "2025-07-10",
+    End_date: "2025-12-01",
+    Status: "Pending",
+  },
+  {
+    Id: 3,
+    Name: "crm revamp",
+    Employees: 14,
+    Start_Date: "2025-05-15",
+    End_date: "2025-10-30",
+    Status: "Active",
+  },
+  {
+    Id: 4,
+    Name: "website redesign",
+    Employees: 5,
+    Start_Date: "2025-08-01",
+    End_date: "2025-09-15",
+    Status: "Completed",
+  },
+  {
+    Id: 5,
+    Name: "mobile app",
+    Employees: 22,
+    Start_Date: "2025-01-20",
+    End_date: "2025-11-20",
+    Status: "Active",
+  },
+  {
+    Id: 6,
+    Name: "billing automation",
+    Employees: 11,
+    Start_Date: "2024-12-05",
+    End_date: "2025-03-31",
+    Status: "Completed",
+  },
+  {
+    Id: 7,
+    Name: "data migration",
+    Employees: 9,
+    Start_Date: "2025-03-01",
+    End_date: "2025-06-30",
+    Status: "Completed",
+  },
+  {
+    Id: 8,
+    Name: "security audit",
+    Employees: 4,
+    Start_Date: "2025-09-05",
+    End_date: "2025-10-05",
+    Status: "Pending",
+  },
+  {
+    Id: 9,
+    Name: "internal wiki",
+    Employees: 3,
+    Start_Date: "2025-02-10",
+    End_date: "2025-04-22",
+    Status: "Completed",
+  },
+  {
+    Id: 10,
+    Name: "ai assistant",
+    Employees: 18,
+    Start_Date: "2025-06-18",
+    End_date: "2025-12-31",
+    Status: "Active",
+  },
+  {
+    Id: 11,
+    Name: "partner portal",
+    Employees: 7,
+    Start_Date: "2025-04-12",
+    End_date: "2025-08-20",
+    Status: "Completed",
+  },
+  {
+    Id: 12,
+    Name: "ops dashboard",
+    Employees: 16,
+    Start_Date: "2025-07-25",
+    End_date: "2025-11-05",
+    Status: "Active",
+  },
+  {
+    Id: 13,
+    Name: "qa framework",
+    Employees: 6,
+    Start_Date: "2025-05-01",
+    End_date: "2025-07-01",
+    Status: "Completed",
+  },
+  {
+    Id: 14,
+    Name: "iot gateway",
+    Employees: 13,
+    Start_Date: "2025-08-20",
+    End_date: "2026-01-15",
+    Status: "Pending",
+  },
+  {
+    Id: 15,
+    Name: "reporting suite",
+    Employees: 10,
+    Start_Date: "2025-03-18",
+    End_date: "2025-10-01",
+    Status: "Active",
+  },
+];
+
+const sortOptions = [
+  { label: "Name", value: "name" },
+  { label: "Employees", value: "employees" },
+  { label: "Start Date", value: "startDate" },
+  { label: "End Date", value: "endDate" },
+];
 
 const DisplayProjectStatus = ({ name, count }) => {
   return (
@@ -413,16 +187,195 @@ const DisplayProjectStatus = ({ name, count }) => {
   );
 };
 
-const DisplayProject = ({ element }) => (
+const DisplayProject = ({ ele }) => (
   <tr>
-    <td>{element.Id}</td>
-    <td>{element.Name}</td>
-    <td>{element.Employees}</td>
-    <td>{element.Start_Date}</td>
-    <td>{element.End_Date}</td>
-    <td>{element.Status}</td>
-    <td>
-      <Button variant="danger">Delete</Button>
+    <td>{ele.Id}</td>
+    <td>{ele.Name}</td>
+    <td>{ele.Employees}</td>
+    <td>{ele.Start_Date}</td>
+    <td>{ele.End_date}</td> {/* match the data key */}
+     <td>{ele.Status}</td>
+    <td style={{ textAlign: "center" }}>
+      <Button className="me-2" variant="primary">View</Button>
+      <Button className="me-2" variant="secondary">Edit </Button>
+      <Button className="me-2" variant="danger">Delete</Button>
     </td>
   </tr>
 );
+
+const [sortedValue,setSortedValue]=useState("Sort By");
+const [sortedArray,setSortedArray]=useState(projects); 
+function handlePick(value){
+  setSortedValue(value);
+
+  if(value==="name"){
+    sortedArray.sort((a, b) => a.Name.localeCompare(b.Name));
+    setSortedArray(sortedArray);
+  }
+  else if(value==="employees"){
+    setSortedArray(sortedArray.sort((a, b) => a.Employees - b.Employees));
+  }
+  else if(value==="startDate"){
+    setSortedArray(sortedArray.sort((a, b) => new Date(a.Start_Date) - new Date(b.Start_Date)));
+  }
+  else if(value==="endDate"){
+    setSortedArray(sortedArray.sort((a, b) => new Date(a.End_date) - new Date(b.End_date)));
+  }
+
+}
+
+const SortDropdown=()=>{
+  return (
+  <>
+  <Dropdown as={ButtonGroup}>
+      <Button variant="secondary">{sortedValue}</Button>
+
+      <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+
+      <Dropdown.Menu>
+        {sortOptions.map((option) => (
+          <Dropdown.Item onClick={()=>{handlePick(option.value)}}>{option.value}</Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+    </>
+    );
+}
+
+const filter_options=[
+  { label: "All", value: "All" },
+  { label: "Active", value: "Active" },
+  { label: "Completed", value: "Completed" },
+  { label: "Pending", value: "Pending" },
+]
+const [filteredValue,setFilteredValue]=useState(projects);
+function handleFilter(value){
+  if(value==="All"){
+    setFilteredValue(projects);
+    setSortedArray(projects);
+  }
+  else{
+    const filtered=projects.filter((ele)=>ele.Status===value);
+    setFilteredValue(filtered);
+    setSortedArray(filtered);
+  }
+}
+const FilterButton=()=>{
+  return(
+  <>
+    <Dropdown as={ButtonGroup}>
+      <Button variant="secondary">Filter</Button>
+
+      <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+
+      <Dropdown.Menu>
+        {filter_options.map((option) => (
+          <Dropdown.Item onClick={()=>{handleFilter(option.value)}}>{option.value}</Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  </>
+  )};
+
+const [show, setShow] = useState(false);
+const handleAddProject = (newProjectData) => {
+    // Generate new ID automatically (highest existing ID + 1)
+    
+
+    // Add new project to the existing projects array
+    projects.push(newProjectData);
+    setSortedArray([...projects]);
+    // Update state to trigger re-render
+    
+   
+  };
+  return (
+    <div>
+      <Navbar />
+      <Row>
+        <Col md={3}>
+          <Sidebar projects={"./Project"} />
+        </Col>
+        <Col md={8}>
+          <br></br>
+          <Container className="fluid" style={{ paddingTop: 60, margin: 20 }}>
+            <Row>
+              <Col xs={12} md={6}>
+                <h3 className="mb-0">Projects</h3>
+                <div className="text-muted small">
+                  Manage and track all projects in one place
+                </div>
+              </Col>
+              <Col sm={{ span: 3, offset: 3 }}>
+                <Button variant="primary" onClick={() => setShow(true)}>
+    Add new Project
+  </Button>
+              </Col>
+            </Row>
+          </Container>
+          <Container>
+            <Row>
+              <Col sm={4}>
+                <DisplayProjectStatus name="Active" count={projects.filter(p=>p.Status=="Active").length} />
+              </Col>
+              <Col sm={4}>
+                <DisplayProjectStatus name="Completed" count={projects.filter(p=>p.Status=="Completed").length} />
+              </Col>
+              <Col sm={4}>
+                <DisplayProjectStatus name="Pending" count={projects.filter(p=>p.Status=="Pending").length} />
+              </Col>
+            </Row>
+          </Container>
+          <Container>
+            <Row>
+              <Col sm={8}>
+                <Search_form />
+              </Col>
+            </Row>
+            <Row>
+              
+              <Col sm={{span:7,offset: 1 }} style={{ paddingTop: "20px" ,paddingLeft:672}}>
+                <FilterButton />
+              </Col>
+              <Col sm={{offset: 1 }} style={{ paddingTop: "20px" }}>
+                <SortDropdown />
+              </Col>
+            </Row>
+          </Container>
+          <Container style={{ paddingTop: "20px" }}>
+            <Row>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Employees</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedArray.map((element) => (
+                    <DisplayProject ele={element} />
+                  ))}
+                </tbody>
+              </Table>
+            </Row>
+          </Container>
+        </Col>
+      </Row>
+      <AddNewProject 
+  show={show} 
+  onClose={() => setShow(false)}
+  onProjectAdd={handleAddProject}
+    // Add logic to update your projects array
+    // setProjects(prev => [...prev, newProject]);
+  
+/>
+    </div>
+  );
+}
+
+
