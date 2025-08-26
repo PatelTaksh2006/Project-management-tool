@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function Sidebar(props) {
+export default function Sidebar() {
+  const [CurrentPage,setCurrentPage]=useState("dashboard");
+  function PageHandle()
+  {
+    
+  }
   return (
     <div
       className="d-flex flex-column flex-shrink-0 p-3 bg-light"
@@ -20,12 +25,12 @@ export default function Sidebar(props) {
           </a>
         </li>
         <li>
-          <a href={props.projects} className="nav-link link-dark">
+          <a href="/projects" className="nav-link link-dark">
             Projects
           </a>
         </li>
         <li>
-          <a href="/tasks" className="nav-link link-dark">
+          <a href="/tasks" className="nav-link link-dark" onClick={()=>PageHandle()}>
             Tasks
           </a>
         </li>
