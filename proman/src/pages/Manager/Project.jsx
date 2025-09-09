@@ -1,67 +1,81 @@
 import Search_form from "../../components/Search_form";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { useState } from "react";
-import { Row, Col, Button, Container, Table } from "react-bootstrap";
+import { useState, useMemo } from "react";
+import { Row, Col, Button, Container, Table, Form } from "react-bootstrap";
 import AddNewProject from "../../components/AddNewProject";
-import projects from "../../Data/Projects";
-import DisplayProjectStatus from "../../components/DisplayProjectsStatus";
+import initialProjects from "../../Data/Projects";
 import DisplayProject from "../../components/DisplayProject";
+import { useNavigate } from 'react-router-dom';
 import SortDropdown from "../../components/SortDropdown";
-import FilterButton from "../../components/FilterButton";
 
 export default function Project() {
-  const [sortedValue, setSortedValue] = useState("Sort By");
-  const [sortedArray, setSortedArray] = useState(projects);
+  // Use projects as the source of truth
+  const [projects, setProjects] = useState(initialProjects);
+  const [sortedValue, setSortedValue] = useState("None");
+  const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [show, setShow] = useState(false);
 
+  // Project summary counts (always up-to-date)
+  const activeCount = useMemo(() => projects.filter(p => p.Status === "Active").length, [projects]);
+  const completedCount = useMemo(() => projects.filter(p => p.Status === "Completed").length, [projects]);
+  const pendingCount = useMemo(() => projects.filter(p => p.Status === "Pending").length, [projects]);
+
+  // Filtering and sorting logic
+  const filteredProjects = useMemo(() => {
+    let arr = [...projects];
+    if (searchValue) {
+      arr = arr.filter(p => p.Name.toLowerCase().includes(searchValue.toLowerCase()));
+    }
+    if (statusFilter !== "All") {
+      arr = arr.filter(p => p.Status === statusFilter);
+    }
+    // Sorting
+    if (sortedValue === "name") {
+      arr = arr.sort((a, b) => a.Name.localeCompare(b.Name));
+    } else if (sortedValue === "employees") {
+      arr = arr.sort((a, b) => a.Employees - b.Employees);
+    } else if (sortedValue === "startDate") {
+      arr = arr.sort((a, b) => new Date(a.Start_Date) - new Date(b.Start_Date));
+    } else if (sortedValue === "endDate") {
+      arr = arr.sort((a, b) => new Date(a.End_date) - new Date(b.End_date));
+    }
+    return arr;
+  }, [projects, searchValue, statusFilter, sortedValue]);
+
+  // Handlers
   function handlePick(value) {
     setSortedValue(value);
-
-    if (value === "name") {
-      sortedArray.sort((a, b) => a.Name.localeCompare(b.Name));
-      setSortedArray(sortedArray);
-    } else if (value === "employees") {
-      setSortedArray(sortedArray.sort((a, b) => a.Employees - b.Employees));
-    } else if (value === "startDate") {
-      setSortedArray(
-        sortedArray.sort(
-          (a, b) => new Date(a.Start_Date) - new Date(b.Start_Date)
-        )
-      );
-    } else if (value === "endDate") {
-      setSortedArray(
-        sortedArray.sort((a, b) => new Date(a.End_date) - new Date(b.End_date))
-      );
-    }
   }
-
-  const [filteredValue, setFilteredValue] = useState(projects);
-  function handleFilter(value) {
-    if (value === "All") {
-      setFilteredValue(projects);
-      setSortedArray(projects);
-    } else {
-      const filtered = projects.filter((ele) => ele.Status === value);
-      setFilteredValue(filtered);
-      setSortedArray(filtered);
-    }
+  function handleStatusFilter(value) {
+    setStatusFilter(value);
   }
-
-  const [show, setShow] = useState(false);
   const handleAddProject = (newProjectData) => {
-    // Generate new ID automatically (highest existing ID + 1)
-
-    // Add new project to the existing projects array
-    projects.push(newProjectData);
-    setSortedArray([...projects]);
-    // Update state to trigger re-render
+    setProjects(prev => [...prev, newProjectData]);
   };
+  const onProjectUpdate = (updatedProject) => {
+    setProjects(prev =>
+      prev.map(p => (p.Id === updatedProject.Id ? updatedProject : p))
+    );
+  };
+  const navigate = useNavigate();
+  const onViewProject = (id) => {
+    navigate(`/manager/projects/${id}`);
+  };
+  const onProjectDelete = (projectId) => {
+    setProjects(prev => prev.filter((p) => p.Id !== projectId));
+  };
+  const searchForValue = (value) => {
+    setSearchValue(value);
+  };
+
   return (
     <div>
-      <Navbar />
+      <Navbar name="manager"/>
       <Row>
         <Col md={3}>
-          <Sidebar projects={"./Project"} />
+          <Sidebar user={"manager"} value="project"/>
         </Col>
         <Col md={8}>
           <Container className="fluid" style={{ paddingTop: 60, margin: 20 }}>
@@ -72,62 +86,69 @@ export default function Project() {
                   Manage and track all projects in one place
                 </div>
               </Col>
-              <Col sm={{ span: 3, offset: 3 }}>
+            </Row>
+          </Container>
+          {/* Project summary bar */}
+          <Container>
+            <Row className="mb-2">
+              <Col sm={4}>
+                <div className="p-2 bg-success text-white rounded text-center">
+                  Active: {activeCount}
+                </div>
+              </Col>
+              <Col sm={4}>
+                <div className="p-2 bg-primary text-white rounded text-center">
+                  Completed: {completedCount}
+                </div>
+              </Col>
+              <Col sm={4}>
+                <div className="p-2 bg-warning text-dark rounded text-center">
+                  Pending: {pendingCount}
+                </div>
+              </Col>
+            </Row>
+          </Container>
+          {/* Filter/search/sort controls and Add button */}
+          <Container>
+            <Row className="align-items-center mb-1">
+              <Col md={3} style={{ paddingTop: "10px" }}>
+                <Search_form
+                  searchValue={searchValue}
+                  setSearchValue={searchForValue}
+                  inputWidth="200px"
+                />
+              </Col>
+              <Col md={3} style={{ paddingTop: "10px" }}>
+                <Form.Select
+                  value={statusFilter}
+                  onChange={e => handleStatusFilter(e.target.value)}
+                >
+                  <option value="All">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </Form.Select>
+              </Col>
+              <Col md={3} style={{ paddingTop: "10px" }}>
+                <SortDropdown
+                  handlePick={handlePick}
+                  sortedValue={sortedValue}
+                />
+              </Col>
+              <Col md={3} className="d-flex justify-content-end" style={{ paddingTop: "10px" }}>
                 <Button variant="primary" onClick={() => setShow(true)}>
                   Add new Project
                 </Button>
               </Col>
             </Row>
           </Container>
-          <Container>
-            <Row>
-              <Col sm={4}>
-                <DisplayProjectStatus
-                  name="Active"
-                  count={projects.filter((p) => p.Status == "Active").length}
-                />
-              </Col>
-              <Col sm={4}>
-                <DisplayProjectStatus
-                  name="Completed"
-                  count={projects.filter((p) => p.Status == "Completed").length}
-                />
-              </Col>
-              <Col sm={4}>
-                <DisplayProjectStatus
-                  name="Pending"
-                  count={projects.filter((p) => p.Status == "Pending").length}
-                />
-              </Col>
-            </Row>
-          </Container>
-          <Container>
-            <Row>
-              <Col sm={8}>
-                <Search_form />
-              </Col>
-            </Row>
-            <Row>
-              <Col
-                sm={{ span: 7, offset: 1 }}
-                style={{ paddingTop: "20px", paddingLeft: 560 }}
-              >
-                <FilterButton handleFilter={handleFilter} />
-              </Col>
-              <Col sm={{ offset: 1 }} style={{ paddingTop: "20px" }}>
-                <SortDropdown
-                  handlePick={handlePick}
-                  sortedValue={sortedValue}
-                />
-              </Col>
-            </Row>
-          </Container>
+          {/* Project table */}
           <Container style={{ paddingTop: "20px" }}>
             <Row
               className="table-scroll-container"
               style={{
-                "max-height": "300px",
-                "overflow-y": "scroll",
+                maxHeight: "300px",
+                overflowY: "scroll",
               }}
             >
               <Table striped bordered hover responsive>
@@ -143,8 +164,15 @@ export default function Project() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedArray.map((element) => (
-                    <DisplayProject ele={element} />
+                  {filteredProjects.map((element, idx) => (
+                    <DisplayProject
+                      key={element.Id}
+                      ele={element}
+                      index={idx}
+                      onProjectUpdate={onProjectUpdate}
+                      onProjectDelete={onProjectDelete}
+                      onViewProject={onViewProject}
+                    />
                   ))}
                 </tbody>
               </Table>
@@ -156,8 +184,6 @@ export default function Project() {
         show={show}
         onClose={() => setShow(false)}
         onProjectAdd={handleAddProject}
-        // Add logic to update your projects array
-        // setProjects(prev => [...prev, newProject]);
       />
     </div>
   );

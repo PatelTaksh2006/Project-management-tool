@@ -1,35 +1,28 @@
-import React from 'react'
+import React from "react";
+import { Navbar, Nav, Container, Button, Badge } from "react-bootstrap";
 
-export default function Navbar() {
+export default function TopNavbar({ name }) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-<div className="container-fluid">
-<a className="navbar-brand fw-bold" href="/">PM Tool</a>
+    <Navbar bg="primary" variant="dark" expand="lg" sticky="top" className="shadow-sm">
+      <Container fluid>
+        <Navbar.Brand className="fw-bold" href="/">PM Tool</Navbar.Brand>
 
-text
-    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
-      <span className="navbar-toggler-icon"></span>
-    </button>
+        <Navbar.Toggle aria-controls="topNavbar" />
+        <Navbar.Collapse id="topNavbar">
+          {/* Right-aligned block */}
+          <Nav className="ms-auto align-items-center">
+            <Navbar.Text className="text-white-50 me-3 d-none d-sm-inline">
+              Welcome, {name}
+            </Navbar.Text>
 
-    <div className="collapse navbar-collapse" id="topNavbar">
-      <form className="d-flex ms-auto me-3">
-        <input className="form-control form-control-sm me-2" type="search" placeholder="Search projects, tasks..." />
-      </form>
-      <ul className="navbar-nav mb-2 mb-lg-0">
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" href="/" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i className="bi bi-person-circle me-1"></i> Manager
-          </a>
-          <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-            <li><a className="dropdown-item" href="/settings">Settings</a></li>
-            <li><hr className="dropdown-divider" /></li>
-            <li><a className="dropdown-item" href="/">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-);
+            {name}
+
+            <Button variant="outline-light" size="sm" href="/" className="me-0">
+              Logout
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 }
-

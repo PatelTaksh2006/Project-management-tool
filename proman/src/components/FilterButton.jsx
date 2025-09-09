@@ -1,5 +1,4 @@
 import { Dropdown, ButtonGroup, Button } from "react-bootstrap";
-
 const FilterButton = (props) => {
     const filter_options = [
         { label: "All", value: "All" },
