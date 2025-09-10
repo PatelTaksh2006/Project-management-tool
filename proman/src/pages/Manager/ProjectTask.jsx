@@ -194,6 +194,7 @@ function handleTaskUpdate(updatedTask) {
       </Row>
 
       <AddNewTask
+              empList={project.team}
               show={showCreateTask}
               onClose={() => setShowCreateTask(false)}
               onTaskAdd={handleAddTask}
@@ -202,6 +203,7 @@ function handleTaskUpdate(updatedTask) {
             />
 
             <EditTask
+            
   task={selectedTask}
   show={showUpdateTask}
   onClose={() => setUpdateTask(false)}

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-export default function AddNewTask({ show, onClose, onTaskAdd }) {
+export default function AddNewTask({ empList,show, onClose, onTaskAdd }) {
   // Form data state
   const [formData, setFormData] = useState({
     id: '',
     name: '',
-    assignedTo: '',
+    assignedTo: 'None',
     status: 'To Do',
     priority: 'Medium',
     dueDate: '',
@@ -99,14 +99,16 @@ export default function AddNewTask({ show, onClose, onTaskAdd }) {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Assigned To</Form.Label>
-            <Form.Control
-              type="text"
-              name="assignedTo"
-              value={formData.assignedTo}
-              onChange={handleInputChange}
-              placeholder="Enter assignee"
-              required
-            />
+            <Form.Select 
+            name="AssignedTo"
+            value={FormData.assignedTo}
+            onChange={handleInputChange}
+            required
+            >
+            {empList.map((e)=>(
+              <option value="e.Id">{e.name}</option>
+            ))}
+            </Form.Select>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Status</Form.Label>
